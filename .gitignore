@@ -218,3 +218,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- Proyecto TecLin ---
+# Datos: no se suben (posts_v2.csv pesa 690 MB). Ver README.
+data/
+*.parquet
+*.npy
+*.pkl
+.DS_Store
