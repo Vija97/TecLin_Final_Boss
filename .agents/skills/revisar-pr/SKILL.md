@@ -1,6 +1,6 @@
 ---
 name: revisar-pr
-description: "Revisar una Pull Request del compañero: fugas de datos, uso de la evaluación común, reproducibilidad y formato. Usar cuando se pida revisar una PR o la rama de la otra persona."
+description: "Revisar una Pull Request de otra persona del equipo: fugas de datos, uso de la evaluación común, reproducibilidad y formato. Usar cuando se pida revisar una PR o la rama de otra persona."
 ---
 
 # Revisar una PR
@@ -29,8 +29,10 @@ Entrada: número de PR (o rama). Leer antes [AGENTS.md](../../../AGENTS.md).
    - Una mejora < ~0,3 de RMSE medio presentada como clara.
    - Usuarios sin posts o etiquetas NaN mal tratados.
 
+   - Variante terminada sin predicciones en `predicciones/`, o guardadas con un nombre distinto al de `EXPERIMENTOS.md`.
+
    **Menores**
-   - Falta explicación en celdas de texto; código que debería ir a `src/`; nombres de ficheros.
+   - Falta `Closes #N`; falta explicación en celdas de texto; código que debería ir a `src/`; nombres de ficheros.
 3. Si se puede, ejecutar lo que cambia (p. ej. `python -m src.submission <csv>` o la celda de evaluación
    con `max_posts` reducido) y decir qué se ha ejecutado y qué no.
 

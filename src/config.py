@@ -11,6 +11,7 @@ DATA_DIR = Path(os.environ.get("TECLIN_DATA", REPO_ROOT / "data"))
 RAW_DIR = DATA_DIR / "raw"
 PROCESSED_DIR = DATA_DIR / "processed"
 SUBMISSIONS_DIR = REPO_ROOT / "submissions"
+PREDICCIONES_DIR = REPO_ROOT / "predicciones"
 
 POSTS_CSV = RAW_DIR / "posts_v2.csv"
 TRAIN_CSV = RAW_DIR / "authors_train.csv"

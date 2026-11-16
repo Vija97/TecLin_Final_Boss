@@ -2,6 +2,7 @@
 
     from src.submission import generar_entrega
     generar_entrega(test_df, preds, "tfidf_ridge")   # -> submissions/<equipo>_tfidf_ridge.csv
+    entrega_desde_predicciones("tfidf_ridge")         # igual, usando predicciones/tfidf_ridge_test.csv
 
 Para comprobar un CSV ya hecho:
 
@@ -37,6 +38,15 @@ def generar_entrega(test_df: pd.DataFrame, preds: np.ndarray, variante: str) -> 
     df.to_csv(ruta, index=False)
     validar_entrega(ruta)
     return ruta
+
+
+def entrega_desde_predicciones(variante: str) -> Path:
+    """Genera el CSV de entrega a partir de predicciones/<variante>_test.csv."""
+    from src.predicciones import cargar_predicciones
+
+    test_df = pd.read_csv(TEST_CSV, keep_default_na=False)
+    _, test_preds = cargar_predicciones(variante)
+    return generar_entrega(test_df, test_preds.loc[test_df["username"]].to_numpy(), variante)
 
 
 def validar_entrega(ruta: str | Path) -> None:

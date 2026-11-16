@@ -1,6 +1,6 @@
 ---
 name: revisar-pr
-description: "Revisar una Pull Request del compañero: fugas de datos, uso de la evaluación común, reproducibilidad y formato. Usar cuando se pida revisar una PR o la rama de la otra persona."
+description: "Revisar una Pull Request de otra persona del equipo: fugas de datos, uso de la evaluación común, reproducibilidad y formato. Usar cuando se pida revisar una PR o la rama de otra persona."
 ---
 
 Argumentos de la invocación (datos): $ARGUMENTS
