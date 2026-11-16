@@ -10,13 +10,15 @@ Predicción de los rasgos de personalidad Big Five a partir de posts de Reddit
 
 ## Datos
 
-Los datos no se suben a git (`posts_v2.csv` pesa 690 MB). Están en la **carpeta compartida de Drive**,
-con esta estructura (es la que espera el código):
+Los datos no se suben a git (`posts_v2.csv` pesa 690 MB). En local, cada uno los tiene en `data/` dentro del repo.
+La **carpeta compartida de Drive `TecLin_Final_Boss`** tiene la misma estructura y sirve para Colab y para
+compartir cálculos caros (embeddings):
 
 ```text
-data/
+TecLin_Final_Boss/data/
 ├── raw/         posts_v2.csv, authors_train.csv, authors_test.csv
-└── processed/   posts.parquet (generado con `python -m src.data`) y cachés (embeddings…)
+└── processed/   posts.parquet (los posts en formato rápido, `python -m src.data`)
+                 embeddings/<modelo>/ (los de la #5, para reutilizarlos en la #9)
 ```
 
 ## Puesta en marcha en local
@@ -40,12 +42,14 @@ data/
 En Colab el repo se clona **dentro de tu Drive**: así los notebooks, `EXPERIMENTOS.md`, las predicciones
 y los CSV no se pierden al cerrar la sesión.
 
-1. Añade a tu Drive un acceso directo a la carpeta compartida `data/`.
+1. En Drive, "Compartido conmigo" → `TecLin_Final_Boss` → *Añadir acceso directo* en **Mi unidad**
+   (así Colab la ve en `/content/drive/MyDrive/TecLin_Final_Boss`).
 2. Crea un token de GitHub (Settings → Developer settings → Fine-grained tokens, solo este repo,
    *Contents: Read and write*) y guárdalo en los **Secretos de Colab** (🔑) como `GH_TOKEN`.
    Nunca lo pegues en una celda.
-3. Abre `00_plantilla.ipynb` en Colab y ejecuta la primera celda, ajustando `DRIVE_DATA` y `DRIVE_REPO`.
-   La primera vez clona el repo en tu Drive.
+3. Abre `00_plantilla.ipynb` en Colab, pon tu rama en `RAMA` y ejecuta la primera celda.
+   La primera vez clona el repo en `Mi unidad/TecLin_repo` (tu copia personal, **fuera** de la carpeta
+   compartida, para no pisaros entre los tres).
 4. A partir de ahí, abre tus notebooks **desde la copia del Drive** (no desde GitHub).
    La última celda de la plantilla hace commit y push a tu rama.
 
