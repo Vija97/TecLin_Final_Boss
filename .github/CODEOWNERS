@@ -1,0 +1,9 @@
+# Código común: cualquier cambio necesita la aprobación de otra persona del equipo.
+# Los notebooks, EXPERIMENTOS.md, predicciones/ y submissions/ no tienen dueño:
+# su autor puede fusionar la PR.
+/src/        @Vija97 @IagoVarelaR @Jesusrf21
+/AGENTS.md   @Vija97 @IagoVarelaR @Jesusrf21
+/CLAUDE.md   @Vija97 @IagoVarelaR @Jesusrf21
+/.agents/    @Vija97 @IagoVarelaR @Jesusrf21
+/.claude/    @Vija97 @IagoVarelaR @Jesusrf21
+/.github/    @Vija97 @IagoVarelaR @Jesusrf21
