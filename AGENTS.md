@@ -19,7 +19,7 @@ se cambia aquí y en ningún otro sitio.
 |---|---|---|
 | `Vija97` | Claude Code | GPU |
 | `IagoVarelaR` | Codex | GPU |
-| `Jesusrf21` | — | **Sin GPU**: no asignarle tareas que necesiten GPU |
+| `Jesusrf21` | Claude Code | **Sin GPU**: no asignarle tareas que necesiten GPU |
 
 Vamos **con margen**: plazos internos varios días antes de los oficiales (ver "Entregas").
 
