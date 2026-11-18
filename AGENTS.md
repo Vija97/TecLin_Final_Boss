@@ -107,6 +107,18 @@ data/               no se sube a git (ver README)
 
 Están en `.agents/skills/` (Codex las lee ahí; `.claude/skills/` solo redirige a ellas):
 
+Del flujo de trabajo (propias):
+
+- `empezar-tarea`: de una Issue a la rama lista, el notebook creado y el plan.
 - `experimento`: implementar y evaluar una variante, guardar sus predicciones y registrarla.
 - `revisar-pr`: revisar la PR de otra persona (fugas, evaluación, reproducibilidad).
 - `entrega`: preparar y validar los CSV de un envío.
+
+De referencia técnica (copias revisadas de K-Dense, ver `ORIGEN.md` de cada una; su cabecera
+"Reglas de TecLin" prevalece sobre el resto del texto):
+
+- `scikit-learn`: pipelines, validación, preprocesado y modelos clásicos.
+- `transformers`: modelos de Hugging Face, tokenización, generación y fine-tuning.
+
+Las skills externas no se instalan en vivo: se copian a `.agents/skills/`, se revisan y se apunta el commit
+de origen. Añadir o actualizar una es un cambio en código común (PR con aprobación).
