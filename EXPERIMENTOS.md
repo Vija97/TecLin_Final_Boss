@@ -14,3 +14,4 @@ explican decisiones en el notebook final y la presentación.
 
 | Fecha de envío | Issue | Variantes enviadas | RMSE leaderboard | Comentario |
 |---|---|---|---|---|
+| 2026-11-19 | #6 | `tfidf_wordchar_ridge` (CV 29.18) · `sbert_minilm_p50_a10` (CV 30.18) · `tfidf_char_ridge` (CV 29.30) | _pendiente (24 nov)_ | Objetivo: ver si la leaderboard se parece a la CV. Las TF-IDF salen de la PR #19 (commit `c995684`), con `alpha` elegido sobre los mismos folds: su CV puede ser algo optimista. |
