@@ -10,8 +10,8 @@ y pasan al notebook final. Cada sección enlaza al notebook donde están las cif
 **Hallazgos**
 
 - **No van de 10 en 10** (contra lo que dice el enunciado): el 99 % son enteros de 0 a 100 y solo el ~16 % son múltiplos de 10.
-- **No vienen de una única escala:** hay picos fuertes (50, 85, 15, 35…), y 119 usuarios (9 %) tienen los 5 rasgos
-  en múltiplos de 5, frente a ~4 que saldrían por azar. Probablemente salen de tests distintos.
+- **No vienen de una única escala:** hay picos fuertes (50, 85, 15, 35…), y 117 usuarios (9 %) tienen los 5 rasgos
+  presentes y en múltiplos de 5, frente a ~4 que saldrían por azar. Probablemente salen de tests distintos.
 - **Distribuciones desplazadas:** apertura hacia arriba (media 63); extraversión, responsabilidad y amabilidad
   hacia abajo (37-43); neuroticismo repartido. Ninguna es uniforme.
 - **Rasgos poco relacionados entre sí:** como mucho ±0,26 (neuroticismo frente a responsabilidad y extraversión).
@@ -19,7 +19,10 @@ y pasan al notebook final. Cada sección enlaza al notebook donde están las cif
 - **Referencia:** predecir la media da 30,38; un 50 fijo empeora 1,6 puntos.
 - **Las variantes base captan poca señal:** la correlación entre predicción y valor real es de 0,21 a 0,35 (TF-IDF).
   Las predicciones son "tímidas" (±8 frente a ±30), pero es lo óptimo con tan poca señal: recalibrar
-  (pendiente ≈ 0,99) o mezclar con la media según el volumen de texto no mejoran.
+  (pendiente ≈ 0,99, ajustada fuera de cada fold) o mezclar con la media del train de cada fold según el volumen
+  de texto no mejoran (comparación de varios `k` exploratoria).
+- ⚠️ Las cifras de TF-IDF salen de la PR #19 (commit `c995684`), aún sin fusionar y con cambios pedidos:
+  hay que reejecutar el paso 5 del notebook cuando entre la #19 corregida.
 - **El volumen de texto afecta a la calidad, no al valor:** con >200 posts el error baja claramente, y con 0-50 posts
   (~20 % de los usuarios) TF-IDF no supera a la media. El nº de posts no se relaciona con ningún rasgo.
 - **TF-IDF y SBERT fallan en los mismos usuarios** (correlación de errores 0,89); su media simple es peor que TF-IDF sola.
