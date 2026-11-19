@@ -39,9 +39,34 @@ y pasan al notebook final. Cada sección enlaza al notebook donde están las cif
 
 _Pendiente (IagoVarelaR)._
 
-## Relaciones entre el texto y los rasgos (#22)
+## Relaciones entre el texto y los rasgos (#22) · [notebook](notebooks/22_vija97_eda_relaciones.ipynb)
 
-_Pendiente (Vija97)._
+**Hallazgos**
+
+- **Tipos MBTI: la señal más fuerte del dataset.** El 23 % de train y el 20 % de test se autoidentifican
+  ("I'm an INFJ"), casi siempre con el mismo tipo. Con cualquier mención: 41 % de train y 34 % de test.
+- **Cada letra coincide con su rasgo, con diferencias enormes:** extraversión 72,5 (E) frente a 24,3 (I);
+  apertura (N/S), amabilidad (F/T) y responsabilidad (J/P) se separan 28-32 puntos. El sufijo -T/-A
+  (neuroticismo) solo aparece en 9 autoidentificaciones: demasiado pocas para concluir.
+- **Estimación sin trampa:** para los 290 usuarios de train que se autoidentifican, la media del grupo de su letra
+  da un RMSE de 25,3 en los 4 rasgos con letra, frente a 29,6 de la media y 27,4 de TF-IDF
+  (⚠️ esta última, con las predicciones de la PR #19, commit `c995684`; se actualizará cuando entre corregida).
+- **Puntuaciones Big Five escritas:** solo el 6-7 % de los usuarios escribe un número junto a un rasgo
+  y solo el 11 % coincide con la etiqueta. Las etiquetas no aparecen tal cual en el texto.
+- **Palabras asociadas:** débiles (≤ 0,16) pero con sentido psicológico (amabilidad ↔ love/thank frente a palabrotas;
+  apertura ↔ philosophy/arguments/artistic; responsabilidad ↔ job/office; extraversión ↔ we/our;
+  neuroticismo ↔ anxiety/sorry/terrified). Aparece jerga MBTI.
+- **Estilo:** débil (≤ 0,14) pero coherente: "we" con extraversión, "I" y emociones negativas con neuroticismo,
+  palabrotas en contra y emociones positivas a favor de la amabilidad.
+
+**Implicaciones para la estrategia**
+
+1. **Prioridad 1: variante MBTI.** Extraer el tipo (autoidentificación y quizá menciones repetidas) y sus 4 letras
+   como features, combinadas con el modelo de texto. El sufijo -T/-A, solo si hay suficientes casos.
+2. **La limpieza (#7) debe conservar las menciones MBTI.**
+3. **Features de estilo (#8):** débiles pero coherentes; suman poco y explican mucho (presentación).
+4. **Palabras asociadas:** TF-IDF ya las aprovecha, así que no justifican una variante aparte.
+5. **Prioridad baja:** extraer puntuaciones Big Five escritas.
 
 ## Decisión de estrategias (#23)
 
