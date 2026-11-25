@@ -12,6 +12,7 @@ explican decisiones en el notebook final y la presentación.
 | 2026-11-25 | Vija97 | #32 | tfidf_ridgecv | `notebooks/32_vija97_mbti.ipynb` | 29.75 | 26.96 | 29.39 | 28.73 | 31.19 | **29.20** | TF-IDF palabras (1-2) + caracteres (char_wb 2-5), hasta 500 posts/usuario, RidgeCV (alpha con validación interna, sin trampa). Vocabulario ajustado solo con el train de cada fold. ~12 min sin GPU. |
 | 2026-11-25 | Vija97 | #32 | mbti_auto | `notebooks/32_vija97_mbti.ipynb` | 29.22 | 26.69 | 28.69 | 27.83 | 30.92 | **28.67** | `tfidf_ridgecv` + 4 letras del MBTI autoidentificado (+1/−1) e indicador. Tipo extraído del propio texto, sin etiquetas. −0,53, mejora en los 5 folds. |
 | 2026-11-25 | Vija97 | #32 | mbti_auto_menc | `notebooks/32_vija97_mbti.ipynb` | 29.14 | 26.59 | 28.17 | 27.39 | 30.79 | **28.41** | Como `mbti_auto` y, si no hay autoidentificación, el tipo más mencionado (≥ 3 menciones, umbral fijado de antemano). Cobertura 32 % train / 26 % test. **−0,79**, mejora en los 5 folds. |
+| 2026-11-25 | Vija97 | #7 | mbti_auto_menc_limpio | `notebooks/07_vija97_limpieza.ipynb` | 29.23 | 26.58 | 28.30 | 27.40 | 30.77 | **28.46** | `mbti_auto_menc` con todas las reglas de `src/limpieza.py` (html, markdown, urls, vacíos, dedup). +0,04 frente a sin limpieza: no mejora (ruido). Normalizar solo: 28,45; quitar solo: 28,44. |
 
 ## Envíos
 

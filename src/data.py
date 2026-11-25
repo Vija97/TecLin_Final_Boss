@@ -52,13 +52,16 @@ def cargar_autores() -> tuple[pd.DataFrame, pd.DataFrame]:
     return train, test
 
 
-def textos_por_usuario(max_posts: int | None = None, sep: str = "\n") -> pd.Series:
+def textos_por_usuario(max_posts: int | None = None, sep: str = "\n",
+                       posts: pd.DataFrame | None = None) -> pd.Series:
     """Texto de cada usuario (train + test) concatenando sus posts.
 
     max_posts: si se indica, toma como mucho ese número de posts por usuario
     (muestra aleatoria con SEED, reproducible). Los usuarios sin posts reciben "".
+    posts: posts ya preparados (p. ej., con `src.limpieza.limpiar_posts`); por defecto, todos.
     """
-    posts = cargar_posts()
+    if posts is None:
+        posts = cargar_posts()
     if max_posts is not None:
         rng = np.random.default_rng(SEED)
         posts = posts.assign(_r=rng.random(len(posts)))
