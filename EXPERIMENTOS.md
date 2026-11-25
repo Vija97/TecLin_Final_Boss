@@ -9,6 +9,9 @@ explican decisiones en el notebook final y la presentación.
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 2026-11-04 | Vija97 | — | media | `00_plantilla.ipynb` | 31.23 | 27.85 | 30.03 | 30.62 | 32.30 | **30.41** | Predice la media de train. Es lo mínimo que hay que batir. |
 | 2026-11-18 | IagoVarelaR | #5 | sbert_minilm_p50_a10 | `notebooks/05_iago_sbert.ipynb` | 30.96 | 27.72 | 29.91 | 30.32 | 32.02 | **30.18** | MiniLM congelado; hasta 50 posts/usuario (69.472 posts), SEED 42, límite de 256 tokens; media por usuario y Ridge alpha=10. Los 39 usuarios sin posts reciben vector cero. Embeddings de train/test sin ajustar el encoder ni utilizar etiquetas. Generación y guardado: 74.9 s en RTX 3050 Laptop. Mejora de 0.224 frente a la media, no concluyente según el margen del equipo. |
+| 2026-11-25 | Vija97 | #32 | tfidf_ridgecv | `notebooks/32_vija97_mbti.ipynb` | 29.75 | 26.96 | 29.39 | 28.73 | 31.19 | **29.20** | TF-IDF palabras (1-2) + caracteres (char_wb 2-5), hasta 500 posts/usuario, RidgeCV (alpha con validación interna, sin trampa). Vocabulario ajustado solo con el train de cada fold. ~12 min sin GPU. |
+| 2026-11-25 | Vija97 | #32 | mbti_auto | `notebooks/32_vija97_mbti.ipynb` | 29.22 | 26.69 | 28.69 | 27.83 | 30.92 | **28.67** | `tfidf_ridgecv` + 4 letras del MBTI autoidentificado (+1/−1) e indicador. Tipo extraído del propio texto, sin etiquetas. −0,53, mejora en los 5 folds. |
+| 2026-11-25 | Vija97 | #32 | mbti_auto_menc | `notebooks/32_vija97_mbti.ipynb` | 29.14 | 26.59 | 28.17 | 27.39 | 30.79 | **28.41** | Como `mbti_auto` y, si no hay autoidentificación, el tipo más mencionado (≥ 3 menciones, umbral fijado de antemano). Cobertura 32 % train / 26 % test. **−0,79**, mejora en los 5 folds. |
 
 ## Envíos
 
