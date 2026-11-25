@@ -70,4 +70,27 @@ _Pendiente (IagoVarelaR)._
 
 ## Decisión de estrategias (#23)
 
-_Pendiente: tabla estrategia · evidencia · ganancia esperada · coste · responsable · prioridad._
+> **Propuesta de Vija97, pendiente de que IagoVarelaR la apruebe en la PR.** Sale de las secciones #20, #21 (PR #27)
+> y #22. Las ganancias son estimaciones exploratorias sobre los mismos folds; la cifra buena será la de cada variante.
+
+**Punto de partida:** TF-IDF word+char 29,18 (validación cruzada) · media 30,41. La señal del texto es débil
+(correlación predicción-real 0,2-0,35) y los modelos actuales fallan en los mismos usuarios.
+
+| Prio | Estrategia | Evidencia | Ganancia esperada | Coste | Quién | Issue |
+|---|---|---|---|---|---|---|
+| **1** | **Variante MBTI:** extraer el tipo autoidentificado y usar sus 4 letras como features junto al modelo de texto | #22: E/I +48 puntos; 20-23 % de usuarios; en ellos 29,6 → 25,3 | **~−0,35** (29,18 → 28,83 combinando TF-IDF con la media del grupo MBTI de forma sencilla); un modelo bien hecho puede sacar algo más | Bajo (regex + Ridge, sin GPU) | Vija97 | nueva |
+| **2** | **Limpieza común (#7):** quitar vacíos y `[deleted]`/`[removed]`, deduplicar dentro de cada usuario, URLs → `URL`, decodificar HTML, quitar líneas citadas `>`, **conservar menciones MBTI** | #21 (impacto de cada regla) | Pequeña, incierta: se mide con TF-IDF y SBERT | Medio | IagoVarelaR + Vija97 | #7 |
+| **2** | **SBERT con más texto** (≥ 500 posts por usuario) | #20: el error baja con el volumen; la #5 usó 50 posts | Media para SBERT | Medio (GPU) | IagoVarelaR | nueva |
+| **2** | **Elegir `alpha` sin trampa** (validación interna) en TF-IDF | Revisión de la #19 | Ninguna; cifra fiable | Bajo | Jesusrf21 | #4 / PR #19 |
+| **3** | **Features de estilo y léxicos (#8)** añadidas al modelo de texto | #22: señales ≤ 0,14 pero coherentes | Pequeña; mucho valor para explicar | Bajo (CPU) | Jesusrf21 | #8 |
+| **3** | **Combinar variantes (#11)** cuando haya MBTI y estilo | #20: errores actuales correlación 0,89 | Pequeña ahora; más con señales distintas | Bajo (CPU) | Jesusrf21 | #11 |
+| 4 | Fine-tuning de un Transformer (#10) | Señal de texto débil; caro | Incierta | Alto (GPU) | IagoVarelaR | #10: solo si sobra tiempo |
+| 4 | Cuestionarios + SBERT (#9) | Sin evidencia directa en el análisis | Incierta | Medio | Vija97 | #9: se sustituye por la variante MBTI |
+| — | LLM (#13) | — | Incierta | Alto | Vija97 | #13: opcional |
+
+**Descartadas (los datos ya dicen que no ayudan):** estirar o recalibrar las predicciones y mezclarlas con la media
+(#20); modelo conjunto de 5 salidas (#20: rasgos poco correlacionados); extraer puntuaciones Big Five escritas
+(#22: 6 % de usuarios y ruido); sufijo -T/-A como feature (#22: 9 usuarios); quitar idiomas o posibles bots (#21).
+
+**Orden de trabajo hasta el envío 2 (1 dic):** MBTI, limpieza, SBERT con más texto y `alpha` sin trampa en paralelo;
+después, estilo y combinación.
