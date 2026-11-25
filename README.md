@@ -73,6 +73,9 @@ gh pr create                                   # la plantilla pide "Closes #<iss
 
 | Skill | Para qué | Cómo pedirlo |
 |---|---|---|
+| `empezar-tarea` | Empezar una Issue: rama, notebook y plan | Claude Code: `/empezar-tarea 4` · Codex: "empiezo la #4" |
+| `scikit-learn` | Referencia de buenas prácticas con scikit-learn | Se activa sola al trabajar con modelos clásicos, o `/scikit-learn` |
+| `transformers` | Referencia de modelos de Hugging Face y fine-tuning | Se activa sola, o `/transformers` |
 | `experimento` | Implementar, evaluar, guardar predicciones y registrar una variante | Claude Code: `/experimento TF-IDF + Ridge` · Codex: "usa la skill experimento para…" |
 | `revisar-pr` | Revisar la PR de otra persona | `/revisar-pr 3` |
 | `entrega` | Preparar y validar los CSV de un envío | `/entrega` |
