@@ -1,211 +1,65 @@
-\# Análisis de datos y decisiones
+# Análisis de los datos
 
+Conclusiones del análisis de datos (hito "Análisis"). Sirven para decidir la limpieza (#7) y las estrategias (#23)
+y pasan al notebook final. Cada sección enlaza al notebook donde están las cifras y las gráficas.
 
+> Estas decisiones salen de mirar todo train: la validación cruzada de las variantes que las usen será algo optimista.
 
-Documento vivo que resume los análisis de #20, #21 y #22 para decidir
+## Etiquetas (#20) · [notebook](notebooks/20_vija97_eda_etiquetas.ipynb)
 
-la limpieza (#7) y las estrategias (#23).
+**Hallazgos**
 
+- **No van de 10 en 10** (contra lo que dice el enunciado): el 99 % son enteros de 0 a 100 y solo el ~16 % son múltiplos de 10.
+- **No vienen de una única escala:** hay picos fuertes (50, 85, 15, 35…), y 117 usuarios (9 %) tienen los 5 rasgos
+  presentes y en múltiplos de 5, frente a ~4 que saldrían por azar. Probablemente salen de tests distintos.
+- **Distribuciones desplazadas:** apertura hacia arriba (media 63); extraversión, responsabilidad y amabilidad
+  hacia abajo (37-43); neuroticismo repartido. Ninguna es uniforme.
+- **Rasgos poco relacionados entre sí:** como mucho ±0,26 (neuroticismo frente a responsabilidad y extraversión).
+- **Etiquetas vacías:** 35 usuarios, casi siempre un solo rasgo (la mitad de apertura), sin patrón.
+- **Referencia:** predecir la media da 30,38; un 50 fijo empeora 1,6 puntos.
+- **Las variantes base captan poca señal:** la correlación entre predicción y valor real es de 0,21 a 0,35 (TF-IDF).
+  Las predicciones son "tímidas" (±8 frente a ±30), pero es lo óptimo con tan poca señal: recalibrar
+  (pendiente ≈ 0,99, ajustada fuera de cada fold) o mezclar con la media del train de cada fold según el volumen
+  de texto no mejoran (comparación de varios `k` exploratoria).
+- ⚠️ Las cifras de TF-IDF salen de la PR #19 (commit `c995684`), aún sin fusionar y con cambios pedidos:
+  hay que reejecutar el paso 5 del notebook cuando entre la #19 corregida.
+- **El volumen de texto afecta a la calidad, no al valor:** con >200 posts el error baja claramente, y con 0-50 posts
+  (~20 % de los usuarios) TF-IDF no supera a la media. El nº de posts no se relaciona con ningún rasgo.
+- **TF-IDF y SBERT fallan en los mismos usuarios** (correlación de errores 0,89); su media simple es peor que TF-IDF sola.
 
+**Implicaciones para la estrategia**
 
-Las decisiones derivadas de estos análisis se han pensado observando todo
+1. Hace falta **señal más fuerte y distinta**, no más de lo mismo: combinar modelos parecidos o estirar las predicciones no ayuda.
+2. **Averiguar de dónde salen las etiquetas:** buscar en los posts menciones explícitas de puntuaciones, tests o tipos MBTI (#22). Es la apuesta con más potencial.
+3. **Más texto por usuario** (≥ 500 posts) en todas las variantes, sobre todo en SBERT. Para quien escribe poco, solo ayudarán señales explícitas.
+4. **Un modelo por rasgo**, con su propio centro y recortado a [0, 100]. No hace falta transformar el objetivo.
+5. **Prioridad baja:** modelo conjunto de 5 salidas y tratar las etiquetas vacías.
 
-train. Esto puede hacer que la validación posterior sea algo optimista;
+## Texto: volumen, calidad y ruido (#21) · [notebook](notebooks/21_iago_eda_texto.ipynb)
 
-debe declararse al evaluar las variantes.
+**Hallazgos**
 
+- **Volumen desigual.** La mediana es de 394 posts por usuario en train y 402 en test. Hay 39 usuarios sin posts (29 en train y 10 en test). El 19,8 % de train y el 22,3 % de test tienen 50 posts o menos.
+- **Duplicados.** Hay 306.819 copias extra dentro del mismo usuario (9,82 % de los posts útiles), repartidas entre 1.033 usuarios. Hay también 15.730 textos repetidos entre usuarios, en su mayoría cortos. Una tasa alta de duplicación merece revisión, pero no basta para identificar bots.
+- **Ruido de formato.** Hay 53 posts vacíos o con solo espacios, 27 `[deleted]` y 18 `[removed]`. Las URLs aparecen en 166.359 posts (5,32 %) de 1.353 usuarios. El Markdown explícito aparece en 117.436 posts (3,76 %) de 1.088 usuarios.
+- **Citas.** El análisis del texto sin decodificar encontró 173 posts de 106 usuarios con una línea que empieza por `&gt;`. En total, 14.897 posts contienen `&gt;` en alguna posición. La segunda cifra mide presencia de la entidad HTML, no citas confirmadas. Falta comprobar la detección tras decodificar el HTML.
+- **Idioma.** En una muestra reproducible de 14.967 posts de 1.565 usuarios, el detector clasificó el 97,24 % como inglés, el 1,80 % como no inglés y el 0,96 % como incierto. Son estimaciones sobre la muestra.
+- **Volumen y rasgos.** En train, las correlaciones de Spearman entre volumen de texto y rasgos están entre −0,027 y 0,026. El volumen sirve para comparar errores por tramo, pero aquí no muestra una relación monotónica clara con las etiquetas.
 
+**Propuestas para la limpieza (#7)**
 
-\## #21 · Volumen, calidad y ruido del texto
+1. Quitar posts vacíos y marcadores `[deleted]` y `[removed]`. Probar la deduplicación exacta dentro de cada usuario y medir su efecto, conservando los textos que coincidan entre autores.
+2. Probar la sustitución de URLs por un marcador y normalizar HTML y Markdown conservando el texto. Antes de retirar citas, verificar la detección tras decodificar y eliminar solo las líneas identificadas como citas. Conservar las autoidentificaciones MBTI (#22).
+3. Mantener por ahora los posts en otros idiomas y los usuarios con tasas altas de duplicación. Aplicar las mismas reglas a train y test.
 
+**Implicaciones para la estrategia (#23)**
 
+- Comparar el error por tramos de volumen y medir el coste de limitar o muestrear posts por usuario.
+- Dejar en prioridad baja la mezcla con la media según volumen. La prueba exploratoria del #20 no mejoró TF-IDF. Para los usuarios sin posts, usar la media del train de cada fold como referencia al evaluar alternativas, sin dar por hecho que mejora el modelo.
+## Relaciones entre el texto y los rasgos (#22)
 
-Notebook: `notebooks/21\_iago\_eda\_texto.ipynb`.
+_Pendiente (Vija97)._
 
+## Decisión de estrategias (#23)
 
-
-\### Volumen
-
-
-
-\- 1.288 usuarios de train y 323 de test.
-
-\- 3.125.358 posts.
-
-\- 39 usuarios sin posts: 29 de train y 10 de test.
-
-\- Mediana de posts: 394 en train y 402 en test.
-
-\- Mediana de caracteres: 83.142 en train y 79.401 en test.
-
-\- Máximo: 66.354 posts y 15.800.496 caracteres en un usuario.
-
-\- Hasta 50 posts: 255 usuarios de train (19,8 %) y 72 de test (22,3 %).
-
-\- Hasta 100 posts: 364 de train (28,3 %) y 105 de test (32,5 %).
-
-
-
-Train y test tienen un volumen central parecido. Test contiene algo más
-
-de usuarios con poco texto y train tiene una cola más extrema.
-
-
-
-\### Calidad y ruido
-
-
-
-| Señal | Posts afectados | Usuarios afectados | Conclusión |
-
-|---|---:|---:|---|
-
-| Vacíos o solo espacios | 53 | 28 | Eliminar |
-
-| `\[deleted]` | 27 | 16 | Eliminar |
-
-| `\[removed]` | 18 | 11 | Eliminar |
-
-| URLs | 166.359 (5,32 %) | 1.353 | Sustituir URL y conservar texto |
-
-| Markdown explícito | 117.436 (3,76 %) | 1.088 | Normalizar marcas y conservar texto |
-
-| Citas que empiezan por `\&gt;` | 173 | 106 | Decodificar HTML y eliminar solo la línea citada |
-
-| Copias exactas extra dentro del usuario | 306.819 (9,82 % de posts útiles) | 1.033 | Deduplicar dentro del usuario |
-
-
-
-Los duplicados internos aparecen en todos los tamaños: más de la mitad
-
-de las copias extra supera 50 caracteres y 7.374 superan 1.000. No son
-
-solo respuestas breves.
-
-
-
-No se recomienda deduplicar entre usuarios: casi todos los textos
-
-compartidos por personas distintas tienen 25 caracteres o menos y
-
-parecen respuestas genéricas legítimas.
-
-
-
-La duplicación está concentrada. La mediana por usuario es 0,58 %, pero
-
-253 usuarios superan el 10 %, 101 superan el 25 % y cinco superan el
-
-50 %. Estos últimos son posibles casos automatizados, aunque la
-
-duplicación por sí sola no demuestra que sean bots.
-
-
-
-\### Idioma
-
-
-
-Se analizaron 14.967 posts, con hasta 10 textos de al menos 50 caracteres
-
-por usuario:
-
-
-
-\- 97,24 %: inglés seguro.
-
-\- 1,80 %: no inglés seguro.
-
-\- 0,96 %: incierto.
-
-\- 16 usuarios parecen escribir principalmente en otro idioma.
-
-\- 46 usuarios no tienen una muestra suficientemente larga.
-
-
-
-Es una estimación muestral con `langdetect`. No se recomienda eliminar
-
-texto o usuarios por idioma.
-
-
-
-\### Volumen frente a rasgos
-
-
-
-Las correlaciones de Spearman entre `log(posts + 1)` o
-
-`log(caracteres + 1)` y los cinco rasgos están entre -0,027 y 0,026.
-
-Todos los valores p exploratorios son superiores a 0,33.
-
-
-
-No hay evidencia de que el volumen indique si un rasgo debe predecirse
-
-más alto o más bajo. Puede servir como medida de confianza.
-
-
-
-\### Reglas propuestas para #7
-
-
-
-1\. Eliminar vacíos, `\[deleted]` y `\[removed]`.
-
-2\. Deduplicar textos exactos dentro de cada usuario, conservando una copia.
-
-3\. No deduplicar automáticamente entre usuarios.
-
-4\. Sustituir URLs por un token `URL`.
-
-5\. Decodificar entidades HTML y normalizar markdown conservando el texto.
-
-6\. Eliminar únicamente líneas citadas que comiencen por `>`.
-
-7\. Conservar textos no ingleses.
-
-8\. No eliminar posibles bots sin evidencia adicional; deduplicar reduce su peso.
-
-9\. Aplicar exactamente la misma limpieza a train y test.
-
-
-
-\### Implicaciones candidatas para #23
-
-
-
-| Evidencia | Estrategia sugerida | Coste | Prioridad provisional |
-
-|---|---|---:|---|
-
-| 39 usuarios sin posts | Predicción de respaldo basada en la media | Bajo | Alta |
-
-| 20–22 % tiene como máximo 50 posts | Mezclar con la media según volumen | Bajo | Alta |
-
-| Volumen sin correlación con rasgos | Usarlo como confianza, no como dirección | Bajo | Alta |
-
-| Cola de hasta 66.354 posts | Comparar límites de posts por usuario | Medio | Alta |
-
-| 9,82 % de copias exactas internas | Evaluar modelos tras deduplicación | Medio | Alta |
-
-| URLs y markdown frecuentes | Comparar texto normalizado frente a original | Medio | Media |
-
-| Solo 1,80 % no inglés en la muestra | Mantener inglés como enfoque principal | Bajo | Media |
-
-| Cinco usuarios con >50 % duplicado | Análisis de sensibilidad, sin excluirlos directamente | Bajo | Media |
-
-
-
-\### Limitaciones
-
-
-
-\- El idioma se estimó con una muestra, no con todos los posts.
-
-\- Los posibles bots se identificaron únicamente mediante repetición exacta.
-
-\- No se imprimieron textos completos ni nombres reales en el notebook.
-
-\- Las propuestas deben confirmarse con la validación cruzada común.
+_Pendiente: tabla estrategia · evidencia · ganancia esperada · coste · responsable · prioridad._

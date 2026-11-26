@@ -14,3 +14,4 @@ explican decisiones en el notebook final y la presentación.
 
 | Fecha de envío | Issue | Variantes enviadas | RMSE leaderboard | Comentario |
 |---|---|---|---|---|
+| 2026-11-19 | #6 | `tfidf_wordchar_ridge` (CV 29.18) · `sbert_minilm_p50_a10` (CV 30.18) · `tfidf_char_ridge` (CV 29.30) | word+char **29.140** · sbert **30.159** · char **29.184** (media del resto de equipos: 30.479) | **La CV coincide con la leaderboard** (diferencias ≤ 0,12): nos podemos fiar de la validación. Puesto 3 de 14 equipos (1º: 28.750). La leaderboard no cuenta los 10 usuarios de test sin posts. Objetivo: ver si la leaderboard se parece a la CV. Las TF-IDF salen de la PR #19 (commit `c995684`), con `alpha` elegido sobre los mismos folds: su CV puede ser algo optimista. |
