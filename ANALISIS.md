@@ -35,10 +35,27 @@ y pasan al notebook final. Cada sección enlaza al notebook donde están las cif
 4. **Un modelo por rasgo**, con su propio centro y recortado a [0, 100]. No hace falta transformar el objetivo.
 5. **Prioridad baja:** modelo conjunto de 5 salidas y tratar las etiquetas vacías.
 
-## Texto: volumen, calidad y ruido (#21)
+## Texto: volumen, calidad y ruido (#21) · [notebook](notebooks/21_iago_eda_texto.ipynb)
 
-_Pendiente (IagoVarelaR)._
+**Hallazgos**
 
+- **Volumen desigual.** La mediana es de 394 posts por usuario en train y 402 en test. Hay 39 usuarios sin posts (29 en train y 10 en test). El 19,8 % de train y el 22,3 % de test tienen 50 posts o menos.
+- **Duplicados.** Hay 306.819 copias extra dentro del mismo usuario (9,82 % de los posts útiles), repartidas entre 1.033 usuarios. Hay también 15.730 textos repetidos entre usuarios, en su mayoría cortos. Una tasa alta de duplicación merece revisión, pero no basta para identificar bots.
+- **Ruido de formato.** Hay 53 posts vacíos o con solo espacios, 27 `[deleted]` y 18 `[removed]`. Las URLs aparecen en 166.359 posts (5,32 %) de 1.353 usuarios. El Markdown explícito aparece en 117.436 posts (3,76 %) de 1.088 usuarios.
+- **Citas.** El análisis del texto sin decodificar encontró 173 posts de 106 usuarios con una línea que empieza por `&gt;`. En total, 14.897 posts contienen `&gt;` en alguna posición. La segunda cifra mide presencia de la entidad HTML, no citas confirmadas. Falta comprobar la detección tras decodificar el HTML.
+- **Idioma.** En una muestra reproducible de 14.967 posts de 1.565 usuarios, el detector clasificó el 97,24 % como inglés, el 1,80 % como no inglés y el 0,96 % como incierto. Son estimaciones sobre la muestra.
+- **Volumen y rasgos.** En train, las correlaciones de Spearman entre volumen de texto y rasgos están entre −0,027 y 0,026. El volumen sirve para comparar errores por tramo, pero aquí no muestra una relación monotónica clara con las etiquetas.
+
+**Propuestas para la limpieza (#7)**
+
+1. Quitar posts vacíos y marcadores `[deleted]` y `[removed]`. Probar la deduplicación exacta dentro de cada usuario y medir su efecto, conservando los textos que coincidan entre autores.
+2. Probar la sustitución de URLs por un marcador y normalizar HTML y Markdown conservando el texto. Antes de retirar citas, verificar la detección tras decodificar y eliminar solo las líneas identificadas como citas. Conservar las autoidentificaciones MBTI (#22).
+3. Mantener por ahora los posts en otros idiomas y los usuarios con tasas altas de duplicación. Aplicar las mismas reglas a train y test.
+
+**Implicaciones para la estrategia (#23)**
+
+- Comparar el error por tramos de volumen y medir el coste de limitar o muestrear posts por usuario.
+- Dejar en prioridad baja la mezcla con la media según volumen. La prueba exploratoria del #20 no mejoró TF-IDF. Para los usuarios sin posts, usar la media del train de cada fold como referencia al evaluar alternativas, sin dar por hecho que mejora el modelo.
 ## Relaciones entre el texto y los rasgos (#22)
 
 _Pendiente (Vija97)._
